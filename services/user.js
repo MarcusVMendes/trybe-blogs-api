@@ -22,9 +22,19 @@ const getAllUsersService = async (token) => {
   return users;
 };
 
+const getUserByIdService = async (id, token) => {
+  const user = await User.findByPk(id);
+  if (!user) throw errorMessage(404, 'User does not exist');
+  if (!token) throw errorMessage(401, 'Token not found');
+  const validToken = verifyToken(token);
+  if (!validToken) throw errorMessage(401, 'Expired or invalid token');
+  return user;
+};
+
 module.exports = {
   createUserService,
   getAllUsersService,
+  getUserByIdService,
 };
 
 /*
