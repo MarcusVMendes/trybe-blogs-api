@@ -1,4 +1,4 @@
-const Joi = require('@hapi/joi');
+const Joi = require('joi');
 
 const userSchema = Joi.object({
   displayName: Joi.string().min(8).required().messages({
@@ -15,6 +15,26 @@ const userSchema = Joi.object({
   image: Joi.string(),
 });
 
+const loginSchema = Joi.object({
+  email: Joi.string().email().required()
+.messages({
+    required: '"email" is required',
+    'string.empty': '"email" is not allowed to be empty', 
+  }),
+  password: Joi.string().required().messages({
+    required: '"password" is required',
+    'string.empty': '"password" is not allowed to be empty',
+  }),
+});
+
 module.exports = {
   userSchema,
+  loginSchema,
 };
+
+/*
+Validate value options
+'string.empty'
+https://github.com/sideway/joi/blob/master/API.md#anyvalidatevalue-options
+
+*/
