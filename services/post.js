@@ -21,7 +21,7 @@ const createPostService = async (title, content, categoryIds, token) => {
     content,
   };
 };
-
+// push
 module.exports = {
   createPostService,
 };
