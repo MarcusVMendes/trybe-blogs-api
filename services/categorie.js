@@ -16,6 +16,15 @@ const createCategorieService = async (name, token) => {
   };
 };
 
+const getAllCategoriesService = async (token) => {
+  if (!token) throw errorMessage(401, 'Token not found');
+  const validToken = verifyToken(token);
+  if (!validToken) throw errorMessage(401, 'Expired or invalid token');
+  const categories = await Categorie.findAll();
+  return categories;
+};
+
 module.exports = {
   createCategorieService,
+  getAllCategoriesService,
 };

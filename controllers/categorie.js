@@ -1,5 +1,6 @@
 const {
   createCategorieService,
+  getAllCategoriesService,
 } = require('../services/categorie');
 
 const createCategorieController = async (req, res, next) => {
@@ -14,6 +15,18 @@ const createCategorieController = async (req, res, next) => {
   }
 };
 
+const getAllCategoriesController = async (req, res, next) => {
+  try {
+    const { authorization: token } = req.headers;
+    const categories = await getAllCategoriesService(token);
+    return res.status(200).json(categories);
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};
+
 module.exports = {
   createCategorieController,
+  getAllCategoriesController,
 };
