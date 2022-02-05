@@ -1,5 +1,6 @@
 const {
   createUserService,
+  getAllUsersService,
 } = require('../services/user.js');
 
 const createUserController = async (req, res, next) => {
@@ -13,6 +14,18 @@ const createUserController = async (req, res, next) => {
   }
 };
 
+const getAllUsersController = async (req, res, next) => {
+  try {
+    const { authorization: token } = req.headers;
+    const users = await getAllUsersService(token);
+    return res.status(200).json(users);
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};
+
 module.exports = {
   createUserController,
+  getAllUsersController,
 };

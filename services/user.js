@@ -1,7 +1,7 @@
 const { userSchema } = require('../utils/validations');
 const { errorMessage } = require('../utils/errorMessage');
 const { User } = require('../models');
-const { createToken } = require('../utils/token');
+const { createToken, verifyToken } = require('../utils/token');
 
 const createUserService = async (displayName, email, password, image) => {
   const { error } = userSchema.validate({ displayName, email, password, image });
@@ -14,8 +14,17 @@ const createUserService = async (displayName, email, password, image) => {
   return { token };
 };
 
+const getAllUsersService = async (token) => {
+  if (!token) throw errorMessage(401, 'Token not found');
+  const validToken = verifyToken(token);
+  if (!validToken) throw errorMessage(401, 'Expired or invalid token');
+  const users = await User.findAll();
+  return users;
+};
+
 module.exports = {
   createUserService,
+  getAllUsersService,
 };
 
 /*
