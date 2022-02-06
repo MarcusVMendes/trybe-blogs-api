@@ -21,7 +21,27 @@ const createPostService = async (title, content, categoryIds, token) => {
     content,
   };
 };
-// push
+
+const getAllPostsService = async (token) => {
+  if (!token) throw errorMessage(401, 'Token not found');
+  const validToken = await verifyToken(token);
+  if (!validToken) throw errorMessage(401, 'Expired or invalid token');
+  const posts = await BlogPost.findAll({
+    include: [
+      { model: User, as: 'user', attributes: { exclude: ['password'] } },
+      { model: Categorie, as: 'categories', through: { attributes: [] } },
+    ],
+  });
+  return posts;
+};
+
+/*
+How to use an include with sequelize
+https://sequelize.org/master/manual/eager-loading.html
+https://stackoverflow.com/questions/42661141/findall-include-more-tables-on-sequelize-query
+*/
+
 module.exports = {
   createPostService,
+  getAllPostsService,
 };
