@@ -35,6 +35,23 @@ const getAllPostsService = async (token) => {
   return posts;
 };
 
+const getUserPostService = async (id, token) => {
+  console.log(id);
+  if (!token) throw errorMessage(401, 'Token not found');
+  const validToken = await verifyToken(token);
+  if (!validToken) throw errorMessage(401, 'Expired or invalid token');
+  const postExists = await BlogPost.findOne({ where: { id } });
+  if (!postExists) throw errorMessage(404, 'Post does not exist');
+  const [post] = await BlogPost.findAll({
+    where: { id },
+      include: [
+        { model: User, as: 'user', attributes: { exclude: ['password'] } },
+        { model: Categorie, as: 'categories', through: { attributes: [] } },
+      ],
+    });
+  return post;
+};
+
 /*
 How to use an include with sequelize
 https://sequelize.org/master/manual/eager-loading.html
@@ -44,4 +61,5 @@ https://stackoverflow.com/questions/42661141/findall-include-more-tables-on-sequ
 module.exports = {
   createPostService,
   getAllPostsService,
+  getUserPostService,
 };
